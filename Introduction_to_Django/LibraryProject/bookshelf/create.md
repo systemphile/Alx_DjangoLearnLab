@@ -6,7 +6,7 @@ Steps for creating a new instance of our model
 This command will import the Book model
 
 ```
->>> book = Book(title='1984', author='George Orwell', publication_year=1949)
+>>> book = Book.objects.create(title='1984', author='George Orwell', publication_year=1949)
 ```
 We use the model to initialize a new Book instance using its defined attributes.
 
