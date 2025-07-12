@@ -1,4 +1,4 @@
-Steps for creating a new instance of our model
+Create a new instance of our model
 
 ```
 >>> from bookshelf.models import Book

@@ -1,4 +1,4 @@
-Steps for retrieving and displaying all attributes of the book we just created.
+Retrieve and display all attributes of the book we just created.
 
 ```
 >>> from bookshelf.models import Book
@@ -6,7 +6,7 @@ Steps for retrieving and displaying all attributes of the book we just created.
 This command will import the Book Model
 
 ```
->>> Book.objects.get(title='1994')
+>>> Book.objects.get(title="1994")
 ```
 
 If the model contains data, the expected output is as follows:
