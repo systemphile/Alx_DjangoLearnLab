@@ -10,5 +10,5 @@ library = Library.objects.get(name=library_name)
 library.books.all()
 
 library1= Library.objects.all()[1]
-librarian = Librarian.objects.filter(library_id=library1)
+librarian = Librarian.objects.get(library=library1)
 print(librarian)
