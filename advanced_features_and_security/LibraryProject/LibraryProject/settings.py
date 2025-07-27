@@ -152,3 +152,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
+
+# Redirect HTTP to HTTPS
+SECURE_SSL_REDIRECT = True  # Ensures all requests are served over HTTPS
+
+# HSTS headers force browsers to only use HTTPS
+SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow domain to be included in browser preload lists
+
+# Prevent browsers from interpreting files as a different content-type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable browser's XSS protection
+SECURE_BROWSER_XSS_FILTER = True
+
+# Block this site from being rendered in a <frame>
+X_FRAME_OPTIONS = "DENY"
+
+# Only send cookies over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

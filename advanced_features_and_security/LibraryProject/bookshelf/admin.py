@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book
+from .models import Book, Author
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.admin import UserAdmin
 from django import forms
@@ -30,4 +30,3 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Additional Info', {'fields': ('date_of_birth', 'profile_photo')}),
     )
-admin.site.register(CustomUser, CustomUserAdmin)
