@@ -1,8 +1,9 @@
 from django.contrib import admin
-from relationship_app.models import Book, Author, Library, Librarian, UserProfile, CustomUser
+from relationship_app.models import Book, Author, Library, Librarian, UserProfile
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.admin import UserAdmin
 from django import forms
+from bookshelf.models import CustomUser
 
 # Register your models here.
 class AuthorAdmin(admin.ModelAdmin):
