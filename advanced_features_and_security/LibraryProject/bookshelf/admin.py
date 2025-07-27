@@ -30,3 +30,4 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Additional Info', {'fields': ('date_of_birth', 'profile_photo')}),
     )
+@admin.site.register(CustomUser, CustomUserAdmin)
