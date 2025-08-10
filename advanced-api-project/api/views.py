@@ -35,7 +35,7 @@ class BookListView(generics.ListAPIView):
         ?ordering=author,-publication_year    (order by A ID ascending, then publication_year descending)
     """
     queryset = Book.objects.all()
-    serializer_class = BookSerializer(queryset)
+    serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly] # only logged-in users can create
 
      # Backends for filtering, search, and ordering
@@ -51,10 +51,7 @@ class BookListView(generics.ListAPIView):
     search_fields = ['title', 'author__name']
 
     # Allow ordering by these fields
-    ordering_fields = ['title', 'title',]
-
-    # Default ordering (optional)
-    ordering = ['id']
+    ordering_fields = ['title', 'publication_year']
 
     def perform_create(self, serializer):
         # Add extra logic before saving
@@ -66,12 +63,12 @@ class BookListView(generics.ListAPIView):
 
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer(queryset)
+    serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer(queryset)
+    serializer_class = BookSerializer
     permission_classes = [IsAuthenticated] # only logged-in users can create
 
 # Update View with permission & filtering
@@ -81,8 +78,8 @@ class BookUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Optional filter: user can only update books with published_year >= 2025
-        return super().get_queryset().filter(published_year__gte=2025)
+        # Optional filter: user can only update books
+        return super().get_queryset()
 
     def perform_update(self, serializer):
         # Example of extra business logic before updating
