@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 import django_filters
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
 
 
 class BookFilter(django_filters.FilterSet):
@@ -40,7 +40,7 @@ class BookListView(generics.ListAPIView):
 
      # Backends for filtering, search, and ordering
     filter_backends = [
-        DjangoFilterBackend,
+        rest_framework.DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter
     ]
