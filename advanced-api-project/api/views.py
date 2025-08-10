@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics, serializers
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 
@@ -8,7 +9,7 @@ from .serializers import BookSerializer, AuthorSerializer
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer(queryset)
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly] # only logged-in users can create
+    permission_classes = [IsAuthenticatedOrReadOnly] # only logged-in users can create
 
     def perform_create(self, serializer):
         # Add extra logic before saving
@@ -21,18 +22,18 @@ class BookListView(generics.ListAPIView):
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer(queryset)
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer(queryset)
-    permission_classes = [permissions.IsAuthenticated] # only logged-in users can create
+    permission_classes = [IsAuthenticated] # only logged-in users can create
 
 # Update View with permission & filtering
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         # Optional filter: user can only update books with published_year >= 2025
@@ -48,4 +49,4 @@ class BookUpdateView(generics.UpdateAPIView):
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
