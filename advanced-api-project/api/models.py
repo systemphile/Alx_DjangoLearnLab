@@ -1,5 +1,8 @@
 from django.db import models
 
+# Create your models here.
+from django.db import models
+
 # Model Author represents the parent entity in our example.
 # Think of it as a category, group, or any container for multiple Book objects.
 # Other models (like Book) will hold a ForeignKey to Author.
