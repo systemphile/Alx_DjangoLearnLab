@@ -8,8 +8,8 @@ urlpatterns = [
     path('register/', SignUpView.as_view(template_name='register.html'), name='register'),
     path('profile/', profile_view, name='profile'),
     path('posts/', PostListView.as_view(), name='posts'),
-    path('posts/new/', PostCreateView.as_view(), name='posts-new'),
+    path('post/new/', PostCreateView.as_view(), name='posts-new'),
     path('posts/<int:pk>/', PostDetailView.as_view(), name='posts-detail'),
-    path('posts/<int:pk>/edit/', PostUpdateView.as_view(), name='posts-edit'),
-    path('posts/<int:pk>/delete', PostDeleteView.as_view(), name='posts-delete'),
+    path('posts/<int:pk>/update/', PostUpdateView.as_view(), name='posts-update'),
+    path('post/<int:pk>/delete', PostDeleteView.as_view(), name='posts-delete'),
 ]
