@@ -8,7 +8,7 @@ from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm
 class SignUpView(CreateView):
     form_class = RegistrationForm
     success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    template_name = 'register.html'
 
 @login_required
 def profile_view(request):
@@ -27,4 +27,4 @@ def profile_view(request):
         'user_form': user_form,
         'profile_form': profile_form
     }
-    return render(request, 'blog/profile.html', context)
+    return render(request, 'profile.html', context)
