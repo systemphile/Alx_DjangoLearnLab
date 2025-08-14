@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from .models import Post
 
 class RegistrationForm(UserCreationForm):
     # additional fields
@@ -26,3 +27,26 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['bio', 'profile_picture']
+
+class PostModelForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'author']
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None) #store logged-in user
+        super().__init__(*args, **kwargs)
+    
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if len(title) < 3:
+            raise forms.ValidationError('Title must be at least 3 characters long')
+        return title
+    
+    def save(self, commit = True):
+        instance = super().save(commit=False)
+        if self.user:
+            instance.author = self.user #set logged in user as the author
+        if commit:
+            instance.save()
+        return instance
