@@ -42,7 +42,7 @@ class PostDetailView(DetailView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostModelForm
-    template_name = 'blog/post_create.html'
+    template_name = 'blog/post_form.html'
     login_url = 'login/'
 
     def get_form_kwargs(self):
@@ -53,7 +53,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
     model = Post
     form_class = PostModelForm
-    template_name = 'blog/post_update.html'
+    template_name = 'blog/post_form.html'
     login_url = 'login/'
 
     def get_form_kwargs(self):
@@ -66,7 +66,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
     
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    template_name = 'blog/post_deleted.html'
+    template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('/posts/')
     login_url = 'login/'
 
