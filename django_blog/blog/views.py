@@ -76,30 +76,37 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         return self.get_object().author == self.request.user
     
-# Display blog post and its comments; allow adding a comment
-def blog_post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    comments = post.comments.all().order_by('-created_at')
-    form = CommentModelForm()
+# BlogPostDetailView with embedded comments using ListView
+class BlogPostDetailView(ListView):
+    model = Comment
+    template_name = 'blog/blog_post_detail.html'
+    context_object_name = 'comments'
 
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            form = CommentModelForm(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.user = request.user
-                comment.post = post
-                comment.save()
-                return redirect('blog_post_detail', pk=post.pk)
-        else:
-            return redirect('login')  # Redirect to login if not authenticated
+    def get_queryset(self):
+        self.post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        return Comment.objects.filter(post=self.post).order_by('-created_at')
 
-    return render(request, 'blog/blog_post_detail.html', {
-        'post': post,
-        'comments': comments,
-        'form': form
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.post
+        context['form'] = CommentModelForm
+        return context
 
+# Create Comment (handled on a separate URL)
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentModelForm
+    template_name = 'comments/comment_form.html'
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.user = self.request.user
+        form.instance.post = post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog_post_detail', kwargs={'pk': self.kwargs['pk']})
+    
 # Update comment view
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
