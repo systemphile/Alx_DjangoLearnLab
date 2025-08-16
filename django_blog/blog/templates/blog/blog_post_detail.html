@@ -1,0 +1,30 @@
+{% extends 'blog/base.html'%}
+{% block title%}Comments{% endblock %}
+
+{% block content%}
+{% for comment in comments %}
+    <div style="margin-bottom: 1em;">
+        <strong>{{ comment.user.username }}</strong> 
+        <small>{{ comment.created_at|naturaltime }}</small>
+        <p>{{ comment.content }}</p>
+
+        {% if user == comment.user %}
+            <a href="{% url 'comment_edit' comment.pk %}">Edit</a> |
+            <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <h4>Add a Comment:</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+{% endif %}
+{% endblock %}
