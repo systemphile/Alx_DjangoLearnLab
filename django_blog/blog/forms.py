@@ -3,6 +3,7 @@ from .models import Profile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Post, Comment
+from taggit.forms import TagWidget
 
 class RegistrationForm(UserCreationForm):
     # additional fields
@@ -31,8 +32,13 @@ class ProfileUpdateForm(forms.ModelForm):
 class PostModelForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'author']
-    
+        fields = ['title', 'content', 'author', 'tags']
+        widgets = {
+            'tags': TagWidget(attrs={
+                'placeholder': 'Add tags separated by commas',
+            })
+        }
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None) #store logged-in user
         super().__init__(*args, **kwargs)

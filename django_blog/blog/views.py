@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm, PostModelForm, CommentForm
 from .models import Post, Profile, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 
 # Create your views here.
 class SignUpView(CreateView):
@@ -47,6 +48,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostModelForm
     template_name = 'blog/post_form.html'
     login_url = 'login/'
+    success_url = reverse_lazy('posts')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -58,6 +60,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
     form_class = PostModelForm
     template_name = 'blog/post_form.html'
     login_url = 'login/'
+    success_url = reverse_lazy('posts')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -76,8 +79,8 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         return self.get_object().author == self.request.user
     
-# BlogPostDetailView with embedded comments using ListView
-class BlogPostDetailView(ListView):
+# PostDetailView with embedded comments using ListView
+class PostDetailView(ListView):
     model = Comment
     template_name = 'blog/blog_post_detail.html'
     context_object_name = 'comments'
@@ -138,3 +141,23 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('blog_post_detail', kwargs={'pk': self.object.post.pk})
+    
+class SearchResultsView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'results'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct()
+        return Post.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
