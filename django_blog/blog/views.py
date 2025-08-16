@@ -2,7 +2,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm, PostModelForm, CommentModelForm
+from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm, PostModelForm, CommentForm
 from .models import Post, Profile, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -89,13 +89,13 @@ class BlogPostDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['post'] = self.post
-        context['form'] = CommentModelForm
+        context['form'] = CommentForm
         return context
 
 # Create Comment (handled on a separate URL)
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    form_class = CommentModelForm
+    form_class = CommentForm
     template_name = 'comments/comment_form.html'
 
     def form_valid(self, form):
@@ -110,7 +110,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 # Update comment view
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
-    form_class = CommentModelForm
+    form_class = CommentForm
     template_name = 'blog/comment_form.html'
     login_url = 'login'
 

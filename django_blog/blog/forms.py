@@ -51,7 +51,7 @@ class PostModelForm(forms.ModelForm):
             instance.save()
         return instance
     
-class CommentModelForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['post', 'author', 'content']
