@@ -6,6 +6,7 @@ from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm, PostMode
 from .models import Post, Profile, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from taggit.models import Tag
 
 # Create your views here.
 class SignUpView(CreateView):
@@ -160,4 +161,19 @@ class SearchResultsView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
+        return context
+    
+class PostsByTagView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        self.tag = get_object_or_404(Tag, name__iexact=tag_name)
+        return Post.objects.filter(tags__name__iexact=tag_name)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
         return context
