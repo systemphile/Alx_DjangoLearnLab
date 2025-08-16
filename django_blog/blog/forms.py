@@ -5,6 +5,9 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Post, Comment
 from taggit.forms import TagWidget
 
+custom_tag_widget = TagWidget()
+custom_tag_widget.attrs['placeholder'] = 'Add tags separated by commas'
+
 class RegistrationForm(UserCreationForm):
     # additional fields
     email = forms.EmailField()
@@ -33,10 +36,8 @@ class PostModelForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'author', 'tags']
-        widgets = {
-            'tags': TagWidget(attrs={
-                'placeholder': 'Add tags separated by commas',
-            })
+        widgets = widgets = {
+            'tags': custom_tag_widget  # TagWidget() explicitly used
         }
 
     def __init__(self, *args, **kwargs):
