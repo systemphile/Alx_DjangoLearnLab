@@ -42,22 +42,30 @@ class FeedView(generics.ListAPIView):
 class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
 
-        # Prevent duplicate likes
-        if Like.objects.filter(user=request.user, post=post).exists():
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if not created:
             return Response({"error": "You already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
 
-        Like.objects.create(user=request.user, post=post)
+        # Create notification for the post author
+        if post.author != request.user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked your post",
+                target=post
+            )
+
         return Response({"success": f"You liked '{post.title}'"}, status=status.HTTP_201_CREATED)
 
 
 class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
 
         like = Like.objects.filter(user=request.user, post=post).first()
         if not like:
