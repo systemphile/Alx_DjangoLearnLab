@@ -1,0 +1,16 @@
+# Core
+Django>=4.2,<5.0
+
+# Django REST Framework + extensions
+djangorestframework>=3.15.0
+django-filter>=24.2
+
+# Database
+mysqlclient>=2.2.4
+
+# Deployment
+gunicorn>=21.2.0
+whitenoise>=6.7.0
+
+# Optional but recommended
+python-dotenv>=1.0.1    # manage .env files locally
